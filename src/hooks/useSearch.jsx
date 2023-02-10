@@ -1,0 +1,34 @@
+import React, { useEffect, useRef } from "react";
+
+export default function useSearch() {
+  const [search, setSearch] = React.useState("");
+  const [error, setError] = React.useState(null);
+  const isFirstInput = useRef(true);
+
+  useEffect(() => {
+    if (isFirstInput.current) {
+      isFirstInput.current = search === "";
+
+      return;
+    }
+    if (search === "") {
+      setError("No se puede buscar una película vacía");
+      return;
+    }
+    if (search.match(/^\d+$/)) {
+      setError("No se puede buscar un número");
+      return;
+    }
+    if (search.length < 3) {
+      setError("La búsqueda debe tener al menos 3 caracteres");
+      return;
+    }
+    setError(null);
+  }, [search]);
+
+  return {
+    setSearch,
+    search,
+    error,
+  };
+}
